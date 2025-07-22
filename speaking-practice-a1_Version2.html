@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Speaking Practice - A1 English</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+    }
+    .target {
+      font-size: 1.5rem;
+      margin: 1rem 0;
+    }
+    button {
+      padding: 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <h2>🎙️ What's in the Fridge?</h2>
+  <p class="target" id="target">I have some apples and a bottle of milk.</p>
+  <button onclick="startRecognition()">🎤 Start Speaking</button>
+  <p id="result">Your sentence: <span id="spokenText">...</span></p>
+  <p id="feedback"></p>
+
+  <script>
+    const targetText = document.getElementById("target").textContent.toLowerCase();
+
+    function startRecognition() {
+      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.start();
+
+      recognition.onresult = function(event) {
+        const spoken = event.results[0][0].transcript.toLowerCase();
+        document.getElementById("spokenText").textContent = spoken;
+
+        if (spoken === targetText) {
+          document.getElementById("feedback").innerHTML = "✅ Great pronunciation!";
+        } else {
+          document.getElementById("feedback").innerHTML = "❌ Try again. Listen to the sentence and repeat.";
+        }
+      };
+
+      recognition.onerror = function(event) {
+        document.getElementById("feedback").textContent = "Error: " + event.error;
+      };
+    }
+  </script>
+</body>
+</html>
